@@ -60,12 +60,12 @@ function module:OnEvent(event, ...)
 				castBar:EnableMouse(true)
 				castBar.fadeOut = nil
 				castBar.flash = nil
-				--barIcon:SetTexture(GetMacroIconInfo(math.random(1, #GetMacroIcons())))
 				barIcon:SetTexture(GetMacroIcons()[math.random(1, #GetMacroIcons())])
 				barText:SetText(GetSpellInfo(118))
 				barSpark:SetPoint("CENTER", castBar, "LEFT", castBar:GetWidth() * 0.5, barSpark.offsetY or 2)
 				castBar:SetMinMaxValues(0, 100)
 				castBar:SetValue(50)
+				castBar:SetAlpha(1)
 				castBar:Show()
 				barSpark:Show()
 			else
