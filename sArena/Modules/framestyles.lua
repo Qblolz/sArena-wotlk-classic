@@ -175,10 +175,10 @@ hooksecurefunc("ArenaEnemyFrame_UpdatePlayer", function(self)
 
     local raceData = raceIcons[race]
     if raceData and not self.racial.Icon:GetTexture() then
+        self.racial:Show()
         self.racial.Icon:SetTexture(raceData.icon)
     end
 
-    -- sometimes blizzard event-life cycle hide trinket
     if not self.TR.Icon:IsShown() then
         self.TR.Icon:Show()
     end
