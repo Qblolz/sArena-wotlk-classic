@@ -228,7 +228,8 @@ function addon:OnEvent(event, ...)
 
 		addon.testMode = not addon.testMode
 	elseif event == "PLAYER_ENTERING_WORLD" then
-		if addon.testMode then
+		local _, instanceType = IsInInstance()
+		if addon.testMode and instanceType ~= "arena" then
 			addon:OnEvent("TEST_MODE")
 		end
 	end
