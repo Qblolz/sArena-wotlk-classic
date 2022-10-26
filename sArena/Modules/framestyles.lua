@@ -174,7 +174,7 @@ hooksecurefunc("ArenaEnemyFrame_UpdatePlayer", function(self)
     local _, race = UnitRace(self.unit)
 
     local raceData = raceIcons[race]
-    if raceData and not self.racial.Icon:GetTexture() then
+    if raceData then
         self.racial:Show()
         self.racial.Icon:SetTexture(raceData.icon)
     end
