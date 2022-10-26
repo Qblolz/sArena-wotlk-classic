@@ -111,17 +111,17 @@ function module:OnEvent(event, ...)
                 _layout:SetFrameStyle(arenaFrame, self.db)
             end
 
-            local font, _ = arenaFrame.healthbar.TextString:GetFont()
+            local font, _, flags = arenaFrame.healthbar.TextString:GetFont()
 
             if self.db.healthBarFontSize > 0 then
-                arenaFrame.healthbar.TextString:SetFont(font, self.db.healthBarFontSize)
+                arenaFrame.healthbar.TextString:SetFont(font, self.db.healthBarFontSize, flags)
                 arenaFrame.healthbar.TextString:Show()
             else
                 arenaFrame.healthbar.TextString:Hide()
             end
 
             if self.db.powerBarFontSize > 0 then
-                arenaFrame.manabar.TextString:SetFont(font, self.db.powerBarFontSize)
+                arenaFrame.manabar.TextString:SetFont(font, self.db.powerBarFontSize, flags)
                 arenaFrame.manabar.TextString:Show()
             else
                 arenaFrame.manabar.TextString:Hide()
