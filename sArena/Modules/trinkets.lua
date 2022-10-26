@@ -26,18 +26,18 @@ function TRINKET_UNIT_SPELLCAST_SUCCEEDED(self, ...)
 
 	if UnitGUID(self.unit) ~= sourceGUID then return end
 	if event ~= "SPELL_CAST_SUCCESS" then return end
-	
+
 	--if "Qb" ~= sourceName then return end
-	
+
 	local arenaFrame = self:GetParent()
 	local racial = arenaFrame.racial
-	
+
 	-- default trinket
-	if spellId == 42292 then 
+	if spellId == 42292 then
 		self.time = tonumber(120)
 		self.starttime = GetTime()
 		CooldownFrame_Set(self.Cooldown, GetTime(), 120, 1)
-		
+
 		local overallTime = addon.overallCooldown[select(2, UnitRace(self.unit))]
 		if overallTime == nil then return end
 
@@ -72,9 +72,14 @@ function module:OnEvent(event, ...)
 		end
 
 		TR.Cooldown:SetCooldown(0, 0)
+
+		if (UnitFactionGroup('player') == "Horde") then
+			TR.Icon:SetTexture("Interface\\Icons\\INV_Jewelry_Necklace_38")
+		else
+			TR.Icon:SetTexture("Interface\\Icons\\INV_Jewelry_Necklace_37")
+		end
 		
 		if event == "ADDON_LOADED" then
-
 			TR:SetMovable(true)
 			addon:SetupDrag(self, true, TR)
 
@@ -83,12 +88,6 @@ function module:OnEvent(event, ...)
 			TR.Cooldown:ClearAllPoints()
 			TR.Cooldown:SetPoint("TOPLEFT", 1, -1)
 			TR.Cooldown:SetPoint("BOTTOMRIGHT", -1, 1)
-
-			if (UnitFactionGroup('player') == "Horde") then
-				TR.Icon:SetTexture("Interface\\Icons\\INV_Jewelry_Necklace_38")
-			else
-				TR.Icon:SetTexture("Interface\\Icons\\INV_Jewelry_Necklace_37")
-			end
 		elseif event == "TEST_MODE" then
 			if addon.testMode then
 				TR:EnableMouse(true)
