@@ -93,6 +93,16 @@ local UnitClass = UnitClass
 local unpack = unpack
 local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
 
+local showStatusText
+local statusTextDisplay
+
+-- some of the options depend on CVARS, so we fetch them
+local function FetchCVars()
+    showStatusText = GetCVar("statusText")
+    statusTextDisplay = GetCVar("statusTextDisplay")
+end
+
+
 function module:OnEvent(event, ...)
     for i = 1, MAX_ARENA_ENEMIES do
         local arenaFrame = _G["ArenaEnemyFrame"..i]
@@ -102,7 +112,6 @@ function module:OnEvent(event, ...)
             arenaFrame.backgroundFrame = _G["ArenaEnemyFrame"..i.."Background"];
         elseif event == "UPDATE_SETTINGS" then
             local _layout = addon.layouts[self.db.frameStyle]
-
             arenaFrame.healthbar:SetStatusBarTexture(self.db.barTexture)
             arenaFrame.manabar:SetStatusBarTexture(self.db.barTexture)
             arenaFrame.CastingBar:SetStatusBarTexture(self.db.barTexture)
@@ -112,19 +121,38 @@ function module:OnEvent(event, ...)
             end
 
             local font, _, flags = arenaFrame.healthbar.TextString:GetFont()
+            FetchCVars()
 
-            if self.db.healthBarFontSize > 0 then
+            if showStatusText and self.db.healthBarFontSize > 0 then
                 arenaFrame.healthbar.TextString:SetFont(font, self.db.healthBarFontSize, flags)
-                arenaFrame.healthbar.TextString:Show()
+                arenaFrame.healthbar.LeftText:SetFont(font, self.db.healthBarFontSize, flags)
+                arenaFrame.healthbar.RightText:SetFont(font, self.db.healthBarFontSize, flags)
+                if statusTextDisplay == "BOTH" then
+                    arenaFrame.healthbar.RightText:Show()
+                    arenaFrame.healthbar.LeftText:Show()
+                elseif statusTextDisplay ~= "NONE" then
+                    arenaFrame.healthbar.TextString:Show()
+                end
             else
                 arenaFrame.healthbar.TextString:Hide()
+                arenaFrame.healthbar.RightText:Hide()
+                arenaFrame.healthbar.LeftText:Hide()
             end
 
-            if self.db.powerBarFontSize > 0 then
+            if showStatusText and self.db.powerBarFontSize > 0 then
                 arenaFrame.manabar.TextString:SetFont(font, self.db.powerBarFontSize, flags)
-                arenaFrame.manabar.TextString:Show()
+                arenaFrame.manabar.LeftText:SetFont(font, self.db.powerBarFontSize, flags)
+                arenaFrame.manabar.RightText:SetFont(font, self.db.powerBarFontSize, flags)
+                if statusTextDisplay == "BOTH" then
+                    arenaFrame.manabar.RightText:Show()
+                    arenaFrame.manabar.LeftText:Show()
+                elseif statusTextDisplay ~= "NONE" then
+                    arenaFrame.manabar.TextString:Show()
+                end
             else
                 arenaFrame.manabar.TextString:Hide()
+                arenaFrame.manabar.RightText:Hide()
+                arenaFrame.manabar.LeftText:Hide()
             end
         end
     end
@@ -134,6 +162,8 @@ function module:OnEvent(event, ...)
         if addon.testMode and addon.modules["Unit Frames"] then
             addon.modules["Unit Frames"]:OnEvent("TEST_MODE")
         end
+    elseif event == "CVAR_UPDATE" then
+        FetchCVars()
     elseif event == "ADDON_LOADED" then
         self:OnEvent("UPDATE_SETTINGS")
     end
@@ -144,16 +174,16 @@ for i = 1, MAX_ARENA_ENEMIES do
 
     arenaFrame.healthbar.TextString:ClearAllPoints()
     arenaFrame.healthbar.TextString:SetPoint("CENTER", arenaFrame.healthbar)
-    --arenaFrame.healthbar.LeftText:ClearAllPoints()
-    --arenaFrame.healthbar.LeftText:SetPoint("LEFT", arenaFrame.healthbar)
-    --arenaFrame.healthbar.RightText:ClearAllPoints()
-    --arenaFrame.healthbar.RightText:SetPoint("RIGHT", arenaFrame.healthbar)
+    arenaFrame.healthbar.LeftText:ClearAllPoints()
+    arenaFrame.healthbar.LeftText:SetPoint("LEFT", arenaFrame.healthbar)
+    arenaFrame.healthbar.RightText:ClearAllPoints()
+    arenaFrame.healthbar.RightText:SetPoint("RIGHT", arenaFrame.healthbar)
     arenaFrame.manabar.TextString:ClearAllPoints()
     arenaFrame.manabar.TextString:SetPoint("CENTER", arenaFrame.manabar)
-    --arenaFrame.manabar.LeftText:ClearAllPoints()
-    --arenaFrame.manabar.LeftText:SetPoint("LEFT", arenaFrame.manabar)
-    --arenaFrame.manabar.RightText:ClearAllPoints()
-    --arenaFrame.manabar.RightText:SetPoint("RIGHT", arenaFrame.manabar)
+    arenaFrame.manabar.LeftText:ClearAllPoints()
+    arenaFrame.manabar.LeftText:SetPoint("LEFT", arenaFrame.manabar)
+    arenaFrame.manabar.RightText:ClearAllPoints()
+    arenaFrame.manabar.RightText:SetPoint("RIGHT", arenaFrame.manabar)
 end
 
 local classIcons = {
